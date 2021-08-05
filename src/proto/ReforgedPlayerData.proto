@@ -1,0 +1,8 @@
+message ReforgedPlayerData {
+    required uint32 playerId = 1;
+    required string battleTag = 2;
+    optional string clan = 3;
+    optional string portrait = 4;
+    optional uint32 team = 5;
+    optional string unknown = 6;
+}

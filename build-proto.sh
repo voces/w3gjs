@@ -1,0 +1,2 @@
+./node_modules/.bin/pbjs -t static-module -o src/proto/ReforgedPlayerData.js src/proto/ReforgedPlayerData.proto
+./node_modules/.bin/pbts -o src/proto/ReforgedPlayerData.d.ts src/proto/ReforgedPlayerData.js

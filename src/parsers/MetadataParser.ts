@@ -1,15 +1,7 @@
 import { inflate, constants } from "zlib";
 import { DataBlock } from "./RawParser";
 import StatefulBufferParser from "./StatefulBufferParser";
-import { Type, Field } from "protobufjs";
-
-const protoPlayer = new Type("ReforgedPlayerData")
-  .add(new Field("playerId", 1, "uint32"))
-  .add(new Field("battleTag", 2, "string"))
-  .add(new Field("clan", 3, "string"))
-  .add(new Field("portrait", 4, "string"))
-  .add(new Field("team", 5, "uint32"))
-  .add(new Field("unknown", 6, "string"));
+import { ReforgedPlayerData } from "../proto/ReforgedPlayerData";
 
 const inflatePromise = (buffer: Buffer, options = {}): Promise<Buffer> =>
   new Promise((resolve, reject) => {
@@ -145,11 +137,7 @@ export default class MetadataParser extends StatefulBufferParser {
       const followingBytes = this.readUInt32LE();
       const data = this.buffer.slice(this.offset, this.offset + followingBytes);
       if (subtype === 0x3) {
-        const decoded = (protoPlayer.decode(data) as unknown) as {
-          playerId: number;
-          battleTag: string;
-          clan: string;
-        };
+        const decoded = ReforgedPlayerData.decode(data);
         if (decoded.clan === undefined) {
           decoded.clan = "";
         }
