@@ -14,9 +14,9 @@
     "coverage": "jest --collectCoverage --config test/jest.config.js",
     "lint": "eslint --ext .ts,.js src/ test/ && prettier --check .",
     "lint:fix": "eslint --ext .jsx,.js src/** --fix",
-    "build-ts": "tsc",
+    "build-js": "tsc",
     "build-proto": "./build-proto.sh",
-    "build": "npm run build-proto && npm run build-ts"
+    "build": "npm run build-proto && npm run build-js"
   },
   "dependencies": {
     "protobufjs": "^6.10.2"
