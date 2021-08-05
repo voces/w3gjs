@@ -1,7 +1,7 @@
 import { inflate, constants } from "zlib";
 import { DataBlock } from "./RawParser";
 import StatefulBufferParser from "./StatefulBufferParser";
-import { ReforgedPlayerData } from "../proto/ReforgedPlayerData";
+import { ReforgedPlayerData } from "../proto";
 
 const inflatePromise = (buffer: Buffer, options = {}): Promise<Buffer> =>
   new Promise((resolve, reject) => {
