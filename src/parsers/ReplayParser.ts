@@ -30,6 +30,18 @@ export class ReplayParser extends EventEmitter implements ReplayParserEvents {
     );
   }
 
+  // `implements` alone doesn't give the class these overloads, so listeners
+  // would otherwise be typed `any`.
+  on(event: "gamedatablock", listener: (block: GameDataBlock) => void): this;
+  on(
+    event: "basic_replay_information",
+    listener: (data: BasicReplayInformation) => void,
+  ): this;
+  on(event: string | symbol, listener: Parameters<EventEmitter["on"]>[1]): this;
+  on(event: string | symbol, listener: Parameters<EventEmitter["on"]>[1]) {
+    return super.on(event, listener);
+  }
+
   async parse(input: Buffer): Promise<ParserOutput> {
     const rawParserResult = await this.rawParser.parse(input);
     const metadataParserResult = await this.metadataParser.parse(
