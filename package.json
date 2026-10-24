@@ -1,6 +1,6 @@
 {
-  "name": "w3gjs",
-  "version": "4.3.0",
+  "name": "@voces/w3gjs",
+  "version": "4.3.1",
   "description": "A native JavaScript WarCraft 3 replay parser implementation.",
   "main": "dist/cjs/index.js",
   "types": "dist/cjs/index.d.ts",
@@ -52,7 +52,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PBug90/w3gjs.git"
+    "url": "git+https://github.com/voces/w3gjs.git"
   },
   "keywords": [
     "w3g",
@@ -63,7 +63,10 @@
   "author": "PBug90",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PBug90/w3gjs/issues"
+    "url": "https://github.com/voces/w3gjs/issues"
   },
-  "homepage": "https://github.com/PBug90/w3gjs#readme"
+  "homepage": "https://github.com/voces/w3gjs#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }
