@@ -47,7 +47,10 @@ export class ReplayParser extends EventEmitter implements ReplayParserEvents {
     });
     await this.gameDataParser.parse(
       metadataParserResult.gameData,
-      metadataParserResult.isPost202ReplayFormat,
+      metadataParserResult.isPost202ReplayFormat ||
+        // Builds after 6115 use the 2.0.2 action ids even when the metadata
+        // lacks the 0x38 marker.
+        rawParserResult.subheader.buildNo > 6115,
     );
 
     return result;

@@ -97,6 +97,7 @@ export class MetadataParser extends StatefulBufferParser {
 
   public async parseData(data: Buffer): Promise<ReplayMetadata> {
     this.initialize(data);
+    this.isPost202ReplayFormat = false;
     this.skip(5);
     const playerRecords = [];
     playerRecords.push(this.parseHostRecord());

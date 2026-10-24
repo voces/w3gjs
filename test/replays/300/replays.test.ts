@@ -1,4 +1,5 @@
-import W3GReplay from "../../../src";
+import W3GReplay, { ReplayParser } from "../../../src";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { HeroInfo } from "../../../src/Player";
 const Parser = new W3GReplay();
@@ -107,4 +108,35 @@ describe("hero detection", () => {
       { id: "Hmkg", level: 5, abilities: { AHtb: 3, AHbh: 2 } },
     ]);
   });
+});
+
+it("uses 2.0.2 action ids for builds after 6115 without the 0x38 marker", async () => {
+  // A fresh parser, so no earlier replay can leave the post-2.0.2 flag set.
+  const test = await new W3GReplay().parse(
+    path.resolve(__dirname, "849510_buildno7003_no_post202_marker.w3g"),
+  );
+  expect(test.buildNumber).toBe(7003);
+  expect(consoleLogSpy).not.toHaveBeenCalled();
+  expect(consoleErrorSpy).not.toHaveBeenCalled();
+});
+
+it("keeps W3MMD actions that follow a raw 0x77 action", async () => {
+  const parser = new ReplayParser();
+  const keys: string[] = [];
+  parser.on("gamedatablock", (block) => {
+    if (block.id !== 0x1f && block.id !== 0x1e) return;
+    for (const commandBlock of block.commandBlocks) {
+      for (const action of commandBlock.actions) {
+        if (action.id === 0x6b && action.cache.filename === "MMD.dat") {
+          keys.push(action.cache.key);
+        }
+      }
+    }
+  });
+  await parser.parse(
+    readFileSync(path.resolve(__dirname, "844092_sheeptag_w3mmd.w3g")),
+  );
+  expect(keys).toHaveLength(29);
+  expect(keys[0]).toBe("init version 1 1");
+  expect(consoleErrorSpy).not.toHaveBeenCalled();
 });

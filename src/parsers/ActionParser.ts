@@ -334,13 +334,15 @@ export class ActionParser extends StatefulBufferParser {
     isPost202ReplayFormat: boolean = false,
   ): Action | null {
     try {
-      if (isPost202ReplayFormat && actionId > 0x77) {
+      // 2.0.2 dropped the old 0x77 action, shifting everything from 0x77 up
+      // down by one; raw 0x77 is now the identifier/value action (0x78).
+      if (isPost202ReplayFormat && actionId >= 0x77) {
         actionId++;
       }
       switch (actionId) {
         // no action 0x00
         case 0x1:
-          this.skip(1);
+          // Pause has no payload; it usually ends its block, which hid this.
           break;
         case 0x2:
           break;
@@ -523,10 +525,14 @@ export class ActionParser extends StatefulBufferParser {
           break;
         case 0x2f:
           break;
-        case 0x50:
-          this.readUInt8(); // slotNumber
-          this.readUInt32LE(); // flags
+        case 0x50: {
+          const slotNumber = this.readUInt8();
+          const flags = this.readUInt32LE();
+          // Some third-party clients (e.g. RGC) inject custom actions as 0x50
+          // with slot 0xff, where the u32 is a payload length.
+          if (slotNumber === 0xff) this.skip(flags);
           return null;
+        }
         case 0x51:
           const slot = this.readUInt8();
           const gold = this.readUInt32LE();
